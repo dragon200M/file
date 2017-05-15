@@ -98,36 +98,34 @@ def isBalanced(expr):
                 return False
     return len(stack) == 0
 
-s = """
-    IF [OPTION("{0}","{1}")] THEN
 
-        IF [L1 = 6500] THEN
-            SETOPTION("segment1","PPV");
-            SETOPTION("segment3","{2}");
-            SETOPTION("ItemType","1");
-            SETOPTION("MeasurementUnit","7");
-            SETNUMERICOPTION("Quantity",[L1]);
-            SETOPTION("MeasurementUnit2","17");
-            SETNUMERICOPTION("Quantity2",[1]);
-            ENDIF
-        IF [L1 < 6500 OR L1>6500] THEN
-            SETOPTION("segment1","OH");
-            SETOPTION("segment3","{2}");
-            SETOPTION("ItemType","5");
-            SETOPTION("MeasurementUnit","17");
-            SETNUMERICOPTION("Quantity",[1]);
-            SETOPTION("MeasurementUnit2","7");
-            SETNUMERICOPTION("Quantity2",[L1]);
-        ENDIF
-    ENDIF
-        """
+def isFileOk(fileName):
+    content = open(fileName, 'r')
+    lista = []
+    doubleP = []
 
 
-m = re.findall(r'[(){}[\]]+', s)
+    while True:
+        line = content.readline()
+
+        a = re.findall(r'"*',line)
+        doubleP.append("".join(a))
+
+        m  = re.findall(r'[(){}[\]]+', line)
+        lista.append("".join(m))
+        if not line:
+            break
+
+    expr = "".join(lista)
+    content.close()
+    check = False
+    if len("".join(doubleP)) % 2 == 0:
+        check = True
+
+    return check, isBalanced(expr)
 
 
 
-expr = "".join(m)
-print(expr)
-print(isBalanced(expr))
 
+
+print(isFileOk('a'))
